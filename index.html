@@ -172,12 +172,12 @@
             const val = data.scores[idx];
             document.getElementById(subjId).value = (val !== "" && val !== null && val !== undefined) ? val : "";
           });
-          document.getElementById("message-box").innerText = "已為您自動載入歷史紀錄，可直接修改後儲存。";
+          document.getElementById("message-box").innerText = "已為您自動載入歷史紀錄。";
           document.getElementById("message-box").className = "success";
         }
       } catch (err) {
         document.getElementById("message-box").className = "error";
-        document.getElementById("message-box").innerText = "載入歷史資料失敗，請直接重新填寫。";
+        document.getElementById("message-box").innerText = "載入歷史資料失敗。";
         document.getElementById("score-form").style.display = "block";
       }
     }
