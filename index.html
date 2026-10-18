@@ -180,12 +180,14 @@
           if (data.weightedAvg !== undefined || data.rank !== undefined) {
             const avgDisplay = (data.weightedAvg !== undefined && data.weightedAvg !== "") ? data.weightedAvg : "尚無有效採計科目";
             const rankDisplay = data.rank ? `第 ${data.rank} 名` : "無";
+            const totalUsersDisplay = data.totalUsers ? data.totalUsers : 0;
 
             document.getElementById("result-box").innerHTML = `
               <div class="success">
                 <p>歷史紀錄讀取完畢！</p>
                 <p>加權平均：<strong>${avgDisplay}</strong>分</p>
-                <p>目前已計算的人之中，您的名次為<strong>${rankDisplay}</strong></p>
+                <p>目前已有 <strong>${totalUsersDisplay}</strong> 人輸入成績，您的名次為 <strong>${rankDisplay}</strong></p>
+                <p>排名僅供參考，請依最終學校公告為準。</p>
               </div>
             `;
           }
@@ -229,12 +231,13 @@
           document.getElementById("message-box").innerText = "";
           const avgDisplay = result.weightedAvg !== "" ? result.weightedAvg : "尚無有效採計科目";
           const rankDisplay = result.rank ? `第 ${result.rank} 名` : "無";
+          const totalUsersDisplay = result.totalUsers ? result.totalUsers : 0;
 
           document.getElementById("result-box").innerHTML = `
             <div class="success">
               <p>計算完畢！</p>
               <p>加權平均：<strong>${avgDisplay}</strong>分</p>
-              <p>目前已計算的人之中，您的名次為<strong>${rankDisplay}</strong></p>
+              <p>目前已計算的<strong>${totalUsersDisplay}</strong>人中，您的名次為<strong>${rankDisplay}</strong></p>
               <p>排名僅供參考，請依最終學校公告為準。</p>
             </div>
           `;
