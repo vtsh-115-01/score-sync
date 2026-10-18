@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>加權計算與排名系統</title>
+  <title>加權與排名</title>
+  <!-- Google Identity Services SDK -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     body {
@@ -62,8 +63,9 @@
 </head>
 <body>
 
-  <h2>加權計算系統</h2>
-  
+  <h2>成績登記系統</h2>
+
+  <!-- 1. Google 登入按鈕 -->
   <div id="g_id_onload"
        data-client_id="422522661354-pooujtllshgd9q419ov1cgoutlfkgd92.apps.googleusercontent.com"
        data-callback="handleCredentialResponse">
@@ -73,6 +75,7 @@
   <div id="user-info"></div>
   <div id="message-box" class="error"></div>
 
+  <!-- 2. 七科成績輸入表單 -->
   <form id="score-form" onsubmit="submitScores(event)">
     <h3>請輸入各科成績：</h3>
     <div class="field"><label>國文：</label><input type="number" id="chinese" min="0" max="100" required></div>
@@ -83,13 +86,19 @@
     <div class="field"><label>歷史：</label><input type="number" id="history" min="0" max="100" required></div>
     <div class="field"><label>地理：</label><input type="number" id="geography" min="0" max="100" required></div>
     
-    <button type="submit">計算</button>
+    <button type="submit">計算並送出</button>
   </form>
 
+  <!-- 5. 結果顯示區 -->
   <div id="result-box"></div>
+
   <script>
+    // 部署 Web 應用程式 URL
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwQbeZGOGHEq5hLEA_gwNUXEFDGiUcjaYDI4ei3ZQ5QrfP6aK2V3DjB50CYZKwmujEG/exec";
     let currentUserEmail = "";
+    let currentUserName = "";
+
+    // 解析 Google 回傳的 JWT 憑證
     function parseJwt(token) {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -98,20 +107,26 @@
       }).join(''));
       return JSON.parse(jsonPayload);
     }
+
+    // Google 登入完成回調
     function handleCredentialResponse(response) {
       const responsePayload = parseJwt(response.credential);
       currentUserEmail = responsePayload.email;
+      currentUserName = responsePayload.name || "使用者";
       
-      document.getElementById("user-info").innerText = "已登入帳號：" + currentUserEmail;
+      document.getElementById("user-info").innerText = `已登入：${currentUserName} (${currentUserEmail})`;
       document.getElementById("score-form").style.display = "block";
       document.getElementById("message-box").innerText = "";
     }
+
+    // 送出成績
     async function submitScores(e) {
       e.preventDefault();
       if (!currentUserEmail) {
         alert("請先登入 Google 帳號！");
         return;
       }
+
       const scores = [
         Number(document.getElementById("chinese").value),
         Number(document.getElementById("math").value),
@@ -122,7 +137,7 @@
         Number(document.getElementById("geography").value)
       ];
 
-      document.getElementById("message-box").innerText = "處理中...";
+      document.getElementById("message-box").innerText = "資料寫入中，請稍候...";
       document.getElementById("result-box").innerText = "";
 
       try {
@@ -131,26 +146,28 @@
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify({
             action: "verifyAndSubmit",
+            name: currentUserName,
             email: currentUserEmail,
             scores: scores
           })
         });
+
         const result = await res.json();
 
-        if (!result.authorized) {
-          document.getElementById("message-box").innerText = result.message;
-        } else if (result.success) {
+        if (result.success) {
           document.getElementById("message-box").innerText = "";
           document.getElementById("result-box").innerHTML = `
             <div class="success">
-              <p>計算完畢！</p>
+              <p>成績已成功寫入試算表！</p>
               <p>加權平均：<strong>${result.weightedAvg}</strong></p>
-              <p>目前已計算的人數之中，你的排名是<strong>第 ${result.rank} 名</strong></p>
+              <p>班級排名（J欄）：<strong>第 ${result.rank} 名</strong></p>
             </div>
           `;
+        } else {
+          document.getElementById("message-box").innerText = "寫入失敗：" + result.message;
         }
       } catch (err) {
-        document.getElementById("message-box").innerText = "計算失敗：" + err.message;
+        document.getElementById("message-box").innerText = "連線失敗：" + err.message;
       }
     }
   </script>
