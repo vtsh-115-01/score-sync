@@ -90,10 +90,9 @@
   
   <div id="instruction-before" class="instruction-card">
     📌 <strong>使用說明：</strong><br>
-    請先點擊下方按鈕以 Google 帳號登入。驗證後即可輸入或修改各科成績並計算加權平均，且顯示目前已輸入的人的排名。
+    請先點擊下方按鈕以 Google 帳號登入。登入後即可輸入各科成績並計算加權平均，且顯示目前已輸入的人之中你的排名。
   </div>
 
-  <!-- Google 登入按鈕容器 -->
   <div id="signin-container">
     <div id="g_id_onload"
          data-client_id="422522661354-pooujtllshgd9q419ov1cgoutlfkgd92.apps.googleusercontent.com"
@@ -104,21 +103,19 @@
 
   <div id="user-info"></div>
 
-  <!-- 登入後使用說明 -->
   <div id="instruction-after" class="instruction-card" style="display: none;">
-    📌 <strong>填寫說明：</strong>
+    📌 <strong>使用說明：</strong>
     <ul style="margin: 5px 0 0 18px; padding: 0;">
       <li><strong>加權方式：</strong>國、數、英加權 4；物、生、歷、地加權 2。</li>
-      <li><strong>彈性輸入：</strong>若某科未考或無成績，請保持空白，系統將自動不採計該科加權。</li>
-      <li>若您先前已登錄過資料，下方已自動載入您的歷史紀錄，可直接修改後點擊送出。</li>
+      <li><strong>彈性輸入：</strong>若該科成績尚未確定，請保持空白，系統將自動不採計該科加權。</li>
+      <li>若您先前已計算過，下方將自動載入您的紀錄。</li>
     </ul>
   </div>
 
   <div id="message-box" class="error"></div>
 
-  <!-- 七科成績輸入表單 (未填則不加權) -->
   <form id="score-form" onsubmit="submitScores(event)">
-    <h3>請輸入/修改各科成績：</h3>
+    <h3>請輸入各科成績：</h3>
     <div class="field"><label>國文：</label><input type="number" id="chinese" min="0" max="100" placeholder="未輸入則不計"></div>
     <div class="field"><label>數學：</label><input type="number" id="math" min="0" max="100" placeholder="未輸入則不計"></div>
     <div class="field"><label>英文：</label><input type="number" id="english" min="0" max="100" placeholder="未輸入則不計"></div>
@@ -127,10 +124,8 @@
     <div class="field"><label>歷史：</label><input type="number" id="history" min="0" max="100" placeholder="未輸入則不計"></div>
     <div class="field"><label>地理：</label><input type="number" id="geography" min="0" max="100" placeholder="未輸入則不計"></div>
     
-    <button type="submit">儲存成績並計算排名</button>
+    <button type="submit">計算</button>
   </form>
-
-  <!-- 結果顯示區 -->
   <div id="result-box"></div>
 
   <script>
@@ -148,26 +143,18 @@
       }).join(''));
       return JSON.parse(jsonPayload);
     }
-
-    // 登入完成回調
     async function handleCredentialResponse(response) {
       const responsePayload = parseJwt(response.credential);
       currentUserEmail = responsePayload.email;
       currentUserName = responsePayload.name || "使用者";
-      
-      // 隱藏登入按鈕與登入前說明，切換顯示登入後介面
       document.getElementById("signin-container").style.display = "none";
       document.getElementById("instruction-before").style.display = "none";
       document.getElementById("instruction-after").style.display = "block";
       document.getElementById("user-info").innerText = `已登入帳號：${currentUserName} (${currentUserEmail})`;
       
-      document.getElementById("message-box").innerText = "正在檢查並載入歷史成績紀錄...";
-
-      // 向後端查詢是否有舊資料
+      document.getElementById("message-box").innerText = "正在檢查是否有歷史成績紀錄...";
       await fetchUserData(currentUserEmail);
     }
-
-    // 載入使用者歷史資料
     async function fetchUserData(email) {
       try {
         const res = await fetch(GAS_WEB_APP_URL, {
@@ -181,7 +168,6 @@
         document.getElementById("score-form").style.display = "block";
 
         if (data.exists && data.scores) {
-          // 自動帶入舊有數據
           subjects.forEach((subjId, idx) => {
             const val = data.scores[idx];
             document.getElementById(subjId).value = (val !== "" && val !== null && val !== undefined) ? val : "";
@@ -191,27 +177,23 @@
         }
       } catch (err) {
         document.getElementById("message-box").className = "error";
-        document.getElementById("message-box").innerText = "載入歷史資料失敗，您可以直接重新填寫。";
+        document.getElementById("message-box").innerText = "載入歷史資料失敗，請直接重新填寫。";
         document.getElementById("score-form").style.display = "block";
       }
     }
-
-    // 送出成績
     async function submitScores(e) {
       e.preventDefault();
       if (!currentUserEmail) {
         alert("請先登入 Google 帳號！");
         return;
       }
-
-      // 抓取各科分數，留空則傳送 null
       const scores = subjects.map(subjId => {
         const val = document.getElementById(subjId).value.trim();
         return val === "" ? null : Number(val);
       });
 
       document.getElementById("message-box").className = "error";
-      document.getElementById("message-box").innerText = "資料儲存中，請稍候...";
+      document.getElementById("message-box").innerText = "請稍候...";
       document.getElementById("result-box").innerText = "";
 
       try {
@@ -235,13 +217,13 @@
 
           document.getElementById("result-box").innerHTML = `
             <div class="success">
-              <p>成績已成功更新！</p>
-              <p>加權平均：<strong>${avgDisplay}</strong></p>
-              <p>班級排名（J欄）：<strong>${rankDisplay}</strong></p>
+              <p>計算完畢！</p>
+              <p>加權平均：<strong>${avgDisplay}</strong>分</p>
+              <p>目前已計算的人之中，您的名次為<strong>第${rankDisplay}名</strong></p>
             </div>
           `;
         } else {
-          document.getElementById("message-box").innerText = "寫入失敗：" + result.message;
+          document.getElementById("message-box").innerText = "載入失敗：" + result.message;
         }
       } catch (err) {
         document.getElementById("message-box").innerText = "連線失敗：" + err.message;
