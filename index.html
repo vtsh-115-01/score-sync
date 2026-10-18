@@ -7,128 +7,256 @@
   <link rel="icon" href="icon.png" type="image/png">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 520px;
-      margin: 30px auto;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      background-color: #fafafa;
+    :root {
+      --primary-color: #3b82f6;
+      --primary-hover: #2563eb;
+      --success-bg: #ecfdf5;
+      --success-text: #065f46;
+      --success-border: #10b981;
+      --info-bg: #eff6ff;
+      --info-border: #3b82f6;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
     }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      color: var(--text-main);
+    }
+
+    .container {
+      background: #ffffff;
+      width: 100%;
+      max-width: 480px;
+      padding: 28px 24px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+    }
+
     h2 {
       margin-top: 0;
-      color: #333;
-    }
-    .instruction-card {
-      background-color: #eef6ff;
-      border-left: 4px solid #2196F3;
-      padding: 12px;
       margin-bottom: 20px;
-      border-radius: 4px;
-      font-size: 14px;
-      line-height: 1.5;
-      color: #333;
+      font-size: 22px;
+      text-align: center;
+      color: #111827;
+      letter-spacing: -0.02em;
     }
+
+    .instruction-card {
+      background-color: var(--info-bg);
+      border-left: 4px solid var(--info-border);
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .instruction-card strong {
+      color: var(--text-main);
+    }
+
+    #signin-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    #user-info {
+      margin-bottom: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #2563eb;
+      background-color: #f0f7ff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 16px;
+      margin-top: 24px;
+      margin-bottom: 16px;
+      color: #374151;
+      border-bottom: 2px solid #f3f4f6;
+      padding-bottom: 8px;
+    }
+
+    .field-group {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 12px;
+    }
+
     .field {
-      margin-bottom: 12px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      background-color: #f9fafb;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      transition: all 0.2s ease;
     }
+
+    .field:focus-within {
+      border-color: var(--primary-color);
+      background-color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
     label {
-      width: 100px;
-      font-weight: bold;
-      color: #555;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-muted);
+      width: 70px;
     }
+
     input[type="number"] {
       width: 140px;
-      padding: 6px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
     }
+
+    input[type="number"]:focus {
+      border-color: var(--primary-color);
+    }
+
     button {
-      padding: 9px 20px;
-      background-color: #4CAF50;
+      padding: 12px;
+      background-color: var(--primary-color);
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 15px;
-      margin-top: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 20px;
       width: 100%;
+      box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+      transition: all 0.2s ease;
     }
+
     button:hover {
-      background-color: #45a049;
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px -2px rgba(59, 130, 246, 0.4);
     }
+
+    button:active {
+      transform: translateY(0);
+    }
+
     .error {
-      color: #d32f2f;
-      font-weight: bold;
-      margin-top: 10px;
+      color: #dc2626;
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 12px;
+      text-align: center;
     }
+
     .success {
-      color: #2e7d32;
-      background-color: #e8f5e9;
-      padding: 12px;
-      border-radius: 4px;
-      margin-top: 15px;
+      color: var(--success-text);
+      background-color: var(--success-bg);
+      border: 1px solid var(--success-border);
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 14px;
+      line-height: 1.7;
     }
+
+    .success p {
+      margin: 4px 0;
+    }
+
+    .success p strong {
+      font-size: 16px;
+      color: #047857;
+    }
+
     #score-form {
       display: none;
-      margin-top: 20px;
     }
-    #user-info {
-      margin-bottom: 15px;
-      font-weight: bold;
-      color: #2c3e50;
+
+    .hint-text {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 8px;
     }
   </style>
 </head>
 <body>
 
-  <h2>加權成績計算系統</h2>
-  
-  <div id="instruction-before" class="instruction-card">
-    📌 <strong>使用說明：</strong><br>
-    1. 請先點擊下方按鈕以 Google 帳號登入。登入後即可輸入各科成績並計算加權平均，且顯示目前已輸入的人之中你的排名。<br>
-    2. 因學校帳戶有安全鎖，請使用非學校帳號登入。
-  </div>
-
-  <div id="signin-container">
-    <div id="g_id_onload"
-         data-client_id="422522661354-pooujtllshgd9q419ov1cgoutlfkgd92.apps.googleusercontent.com"
-         data-callback="handleCredentialResponse">
-    </div>
-    <div class="g_id_signin" data-type="standard"></div>
-  </div>
-
-  <div id="user-info"></div>
-
-  <div id="instruction-after" class="instruction-card" style="display: none;">
-    📌 <strong>使用說明：</strong>
-    <ul style="margin: 5px 0 0 18px; padding: 0;">
-      <li><strong>加權方式：</strong>國、數、英加權 4；其餘，如物、生、歷、地加權 2。</li>
-      <li><strong>彈性輸入：</strong>若該科成績尚未確定，請保持空白，系統計算將忽略該科。</li>
-      <li>若您先前已計算過，下方將自動載入您的紀錄。</li>
-      <li>排名僅供參考，請依最終學校公告為準。</li>
-    </ul>
-  </div>
-
-  <div id="message-box" class="error"></div>
-
-  <form id="score-form" onsubmit="submitScores(event)">
-    <h3>請輸入各科成績：</h3>
-    <div class="field"><label>國文：</label><input type="number" id="chinese" min="0" max="100" placeholder="未輸入則不計"></div>
-    <div class="field"><label>數學：</label><input type="number" id="math" min="0" max="100" placeholder="未輸入則不計"></div>
-    <div class="field"><label>英文：</label><input type="number" id="english" min="0" max="100" placeholder="未輸入則不計"></div>
-    <div class="field"><label>物理：</label><input type="number" id="physics" min="0" max="100" placeholder="未輸入則不計"></div>
-    <div class="field"><label>生物：</label><input type="number" id="biology" min="0" max="100" placeholder="未輸入則不計"></div>
-    <div class="field"><label>歷史：</label><input type="number" id="history" min="0" max="100" placeholder="未輸入則不計"></div>
-    <div class="field"><label>地理：</label><input type="number" id="geography" min="0" max="100" placeholder="未輸入則不計"></div>
+  <div class="container">
+    <h2>📊 加權成績計算系統</h2>
     
-    <button type="submit">計算</button>
-  </form>
-  <div id="result-box"></div>
+    <div id="instruction-before" class="instruction-card">
+      📌 <strong>使用說明：</strong><br>
+      1. 請先點擊下方按鈕以 Google 帳號登入。登入後即可輸入各科成績並計算加權平均，且顯示目前已輸入的人之中你的排名。<br>
+      2. 因學校帳戶有安全鎖，請使用非學校帳號登入。
+    </div>
+
+    <div id="signin-container">
+      <div id="g_id_onload"
+           data-client_id="422522661354-pooujtllshgd9q419ov1cgoutlfkgd92.apps.googleusercontent.com"
+           data-callback="handleCredentialResponse">
+      </div>
+      <div class="g_id_signin" data-type="standard"></div>
+    </div>
+
+    <div id="user-info" style="display: none;"></div>
+
+    <div id="instruction-after" class="instruction-card" style="display: none;">
+      📌 <strong>使用說明：</strong>
+      <ul style="margin: 6px 0 0 16px; padding: 0;">
+        <li><strong>加權方式：</strong>國、數、英加權 4；物、生、歷、地加權 2。</li>
+        <li><strong>彈性輸入：</strong>若該科成績尚未確定，請保持空白，系統將自動忽略該科。</li>
+        <li>若先前已計算過，系統會自動帶入歷史紀錄。</li>
+        <li>排名僅供參考，請依最終學校公告為準。</li>
+      </ul>
+    </div>
+
+    <div id="message-box"></div>
+
+    <form id="score-form" onsubmit="submitScores(event)">
+      <h3>請輸入各科成績：</h3>
+      <div class="field-group">
+        <div class="field"><label for="chinese">國文</label><input type="number" id="chinese" min="0" max="100" placeholder="未輸入則不計"></div>
+        <div class="field"><label for="math">數學</label><input type="number" id="math" min="0" max="100" placeholder="未輸入則不計"></div>
+        <div class="field"><label for="english">英文</label><input type="number" id="english" min="0" max="100" placeholder="未輸入則不計"></div>
+        <div class="field"><label for="physics">物理</label><input type="number" id="physics" min="0" max="100" placeholder="未輸入則不計"></div>
+        <div class="field"><label for="biology">生物</label><input type="number" id="biology" min="0" max="100" placeholder="未輸入則不計"></div>
+        <div class="field"><label for="history">歷史</label><input type="number" id="history" min="0" max="100" placeholder="未輸入則不計"></div>
+        <div class="field"><label for="geography">地理</label><input type="number" id="geography" min="0" max="100" placeholder="未輸入則不計"></div>
+      </div>
+      
+      <button type="submit">送出並計算排名</button>
+    </form>
+
+    <div id="result-box"></div>
+  </div>
 
   <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwQbeZGOGHEq5hLEA_gwNUXEFDGiUcjaYDI4ei3ZQ5QrfP6aK2V3DjB50CYZKwmujEG/exec";
@@ -145,18 +273,35 @@
       }).join(''));
       return JSON.parse(jsonPayload);
     }
+
     async function handleCredentialResponse(response) {
       const responsePayload = parseJwt(response.credential);
       currentUserEmail = responsePayload.email;
       currentUserName = responsePayload.name || "使用者";
+
       document.getElementById("signin-container").style.display = "none";
       document.getElementById("instruction-before").style.display = "none";
       document.getElementById("instruction-after").style.display = "block";
-      document.getElementById("user-info").innerText = `已登入帳號：${currentUserName} (${currentUserEmail})`;
       
-      document.getElementById("message-box").innerText = "正在檢查是否有歷史成績紀錄...";
+      const userInfoEl = document.getElementById("user-info");
+      userInfoEl.style.display = "block";
+      userInfoEl.innerText = `👤 已登入：${currentUserName} (${currentUserEmail})`;
+      
+      showMessage("正在檢查歷史紀錄...", "info");
       await fetchUserData(currentUserEmail);
     }
+
+    function showMessage(msg, type = "error") {
+      const msgBox = document.getElementById("message-box");
+      if (!msg) {
+        msgBox.innerHTML = "";
+        msgBox.className = "";
+        return;
+      }
+      msgBox.innerText = msg;
+      msgBox.className = type === "success" ? "success" : "error";
+    }
+
     async function fetchUserData(email) {
       try {
         const res = await fetch(GAS_WEB_APP_URL, {
@@ -166,7 +311,7 @@
         });
         const data = await res.json();
 
-        document.getElementById("message-box").innerText = "";
+        showMessage("");
         document.getElementById("score-form").style.display = "block";
 
         if (data.exists && data.scores) {
@@ -174,9 +319,9 @@
             const val = data.scores[idx];
             document.getElementById(subjId).value = (val !== "" && val !== null && val !== undefined) ? val : "";
           });
-          document.getElementById("message-box").innerText = "已為您自動載入歷史紀錄。";
-          document.getElementById("message-box").className = "success";
           
+          showMessage("已自動載入您的歷史紀錄。", "success");
+
           if (data.weightedAvg !== undefined || data.rank !== undefined) {
             const avgDisplay = (data.weightedAvg !== undefined && data.weightedAvg !== "") ? data.weightedAvg : "尚無有效採計科目";
             const rankDisplay = data.rank ? `第 ${data.rank} 名` : "無";
@@ -184,20 +329,20 @@
 
             document.getElementById("result-box").innerHTML = `
               <div class="success">
-                <p>歷史紀錄讀取完畢！</p>
-                <p>加權平均：<strong>${avgDisplay}</strong>分</p>
-                <p>目前已有 <strong>${totalUsersDisplay}</strong> 人輸入成績，您的名次為 <strong>${rankDisplay}</strong></p>
-                <p>排名僅供參考，請依最終學校公告為準。</p>
+                <p><strong>🎉 歷史紀錄讀取完畢！</strong></p>
+                <p>加權平均：<strong>${avgDisplay}</strong> 分</p>
+                <p>目前已計算的 <strong>${totalUsersDisplay}</strong> 人中，您的名次為 <strong>${rankDisplay}</strong></p>
+                <p class="hint-text">註：排名僅供參考，請依最終學校公告為準。</p>
               </div>
             `;
           }
         }
       } catch (err) {
-        document.getElementById("message-box").className = "error";
-        document.getElementById("message-box").innerText = "載入歷史資料失敗。";
+        showMessage("載入歷史資料失敗，請直接輸入成績。", "error");
         document.getElementById("score-form").style.display = "block";
       }
     }
+
     async function submitScores(e) {
       e.preventDefault();
       if (!currentUserEmail) {
@@ -209,8 +354,7 @@
         return val === "" ? null : Number(val);
       });
 
-      document.getElementById("message-box").className = "error";
-      document.getElementById("message-box").innerText = "請稍候...";
+      showMessage("計算與儲存中，請稍候...", "info");
       document.getElementById("result-box").innerText = "";
 
       try {
@@ -228,24 +372,24 @@
         const result = await res.json();
 
         if (result.success) {
-          document.getElementById("message-box").innerText = "";
+          showMessage("");
           const avgDisplay = result.weightedAvg !== "" ? result.weightedAvg : "尚無有效採計科目";
           const rankDisplay = result.rank ? `第 ${result.rank} 名` : "無";
           const totalUsersDisplay = result.totalUsers ? result.totalUsers : 0;
 
           document.getElementById("result-box").innerHTML = `
             <div class="success">
-              <p>計算完畢！</p>
-              <p>加權平均：<strong>${avgDisplay}</strong>分</p>
-              <p>目前已計算的<strong>${totalUsersDisplay}</strong>人中，您的名次為<strong>${rankDisplay}</strong></p>
-              <p>排名僅供參考，請依最終學校公告為準。</p>
+              <p><strong>✅ 計算完畢！</strong></p>
+              <p>加權平均：<strong>${avgDisplay}</strong> 分</p>
+              <p>目前已計算的 <strong>${totalUsersDisplay}</strong> 人中，您的名次為 <strong>${rankDisplay}</strong></p>
+              <p class="hint-text">註：排名僅供參考，請依最終學校公告為準。</p>
             </div>
           `;
         } else {
-          document.getElementById("message-box").innerText = "載入失敗：" + result.message;
+          showMessage("寫入失敗：" + result.message, "error");
         }
       } catch (err) {
-        document.getElementById("message-box").innerText = "連線失敗：" + err.message;
+        showMessage("連線失敗：" + err.message, "error");
       }
     }
   </script>
