@@ -20,9 +20,9 @@
 
   <h2>成績登記系統</h2>
 
-  <!-- 1. Google 登入按鈕 -->
+  <!-- 1. Google 登入按鈕 (請記得換上您的 Google Client ID) -->
   <div id="g_id_onload"
-       data-client_id="AKfycbwQbeZGOGHEq5hLEA_gwNUXEFDGiUcjaYDI4ei3ZQ5QrfP6aK2V3DjB50CYZKwmujEG.apps.googleusercontent.com"
+       data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
        data-callback="handleCredentialResponse">
   </div>
   <div class="g_id_signin" data-type="standard"></div>
@@ -48,11 +48,11 @@
   <div id="result-box"></div>
 
   <script>
-    // 替換為您的 GAS Web App URL
-    const GAS_WEB_APP_URL = "YOUR_GAS_WEB_APP_URL";
+    // 已更新為您的 Apps Script 網頁應用程式 URL
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwQbeZGOGHEq5hLEA_gwNUXEFDGiUcjaYDI4ei3ZQ5QrfP6aK2V3DjB50CYZKwmujEG/exec";
     let currentUserEmail = "";
 
-    // JWT 解析套件簡化版
+    // JWT 解析
     function parseJwt(token) {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -107,11 +107,9 @@
         const result = await res.json();
 
         if (!result.authorized) {
-          // 1. 若帳號不在 A2~A52 中顯示指定錯誤訊息
           document.getElementById("message-box").innerText = result.message;
         } else if (result.success) {
           document.getElementById("message-box").innerText = "";
-          // 5. 顯示計算結果與 J 欄班排名
           document.getElementById("result-box").innerHTML = `
             <div class="success">
               <p>成績已成功寫入！</p>
